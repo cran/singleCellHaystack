@@ -2,7 +2,7 @@ Package: singleCellHaystack
 Type: Package
 Title: Finding Needles (=differentially Expressed Genes) in Haystacks
         (=single Cell Data)
-Version: 0.3.3
+Version: 0.3.4
 Authors@R: c(
     person("Alexis", "Vandenbon", email = "alexis.vandenbon@gmail.com", role = c("aut", "cre"),
         comment = c(ORCID = "0000-0003-2180-5732")),
@@ -20,16 +20,16 @@ Description: Identification of differentially expressed genes (DEGs) is a key st
     Vandenbon and Diez (Nature Communications, 2020) <doi:10.1038/s41467-020-17900-3>.
 Imports: methods, Matrix, splines, ggplot2, reshape2
 Suggests: knitr, rmarkdown, SummarizedExperiment, SingleCellExperiment,
-        Seurat, SeuratData, Rtsne, cowplot, testthat
+        SeuratObject, Rtsne, cowplot, testthat, wrswoR
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2020-09-18 08:45:45 UTC; alex
+Packaged: 2021-03-26 02:53:58 UTC; diez
 Author: Alexis Vandenbon [aut, cre] (<https://orcid.org/0000-0003-2180-5732>),
   Diego Diez [aut] (<https://orcid.org/0000-0002-2325-4893>)
 Maintainer: Alexis Vandenbon <alexis.vandenbon@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-09-18 14:40:11 UTC
+Date/Publication: 2021-03-28 01:50:03 UTC

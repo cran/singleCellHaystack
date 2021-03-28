@@ -59,13 +59,13 @@ haystack.data.frame <- function(x, dim1 = 1, dim2 = 2, detection, method = "high
 
 #' @rdname haystack
 #' @export
-haystack.Seurat <- function(x, assay = "RNA", slot = "data", coord = "pca", dims = NULL, cutoff = 1, method = NULL, ...) {
-  if (!requireNamespace("Seurat", quietly = TRUE)) {
-    stop("Package \"Seurat\" needed for this function to work. Please install it.", call. = FALSE)
+haystack.Seurat <- function(x, assay = "RNA", slot = "data", coord = "pca", dims = NULL, cutoff = 1, method = NULL, use.advanced.sampling = NULL, ...) {
+  if (!requireNamespace("SeuratObject", quietly = TRUE)) {
+    stop("Package \"SeuratObject\" needed for this function to work. Please install it.", call. = FALSE)
   }
 
-  y <- Seurat::GetAssayData(x, slot = slot, assay = assay)
-  z <- Seurat::Embeddings(x, coord)
+  y <- SeuratObject::GetAssayData(x, slot = slot, assay = assay)
+  z <- SeuratObject::Embeddings(x, coord)
 
   if (! is.null(dims)) {
     z <- z[, dims, drop = FALSE]
@@ -80,12 +80,18 @@ haystack.Seurat <- function(x, assay = "RNA", slot = "data", coord = "pca", dims
     message("### Input coordinates have ",ncol(z)," dimensions, so method set to \"",method,"\"")
   }
 
-  haystack(z, detection = y > cutoff, method = method, ...)
+  y <- y > cutoff
+
+  if (isTRUE(use.advanced.sampling)) {
+    use.advanced.sampling = colSums(y)
+  }
+
+  haystack(z, detection = y, method = method, use.advanced.sampling = use.advanced.sampling, ...)
 }
 
 #' @rdname haystack
 #' @export
-haystack.SingleCellExperiment <- function(x, assay = "counts", coord = "TSNE", dims = NULL, cutoff = 1, method = NULL, ...) {
+haystack.SingleCellExperiment <- function(x, assay = "counts", coord = "TSNE", dims = NULL, cutoff = 1, method = NULL, use.advanced.sampling = NULL, ...) {
   if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
     stop("Package \"SummarizedExperiment\" needed for this function to work. Please install it.", call. = FALSE)
   }
@@ -114,7 +120,13 @@ haystack.SingleCellExperiment <- function(x, assay = "counts", coord = "TSNE", d
     message("### Input coordinates have ",ncol(z)," dimensions, so method set to \"",method,"\"")
   }
 
-  haystack(z, detection = y > cutoff, method = method, ...)
+  y <- y > cutoff
+
+  if (isTRUE(use.advanced.sampling)) {
+    use.advanced.sampling = colSums(y)
+  }
+
+  haystack(z, detection = y, method = method, use.advanced.sampling = use.advanced.sampling, ...)
 }
 
 #' Visualizing the detection/expression of a gene in a 2D plot
@@ -164,12 +176,12 @@ plot_gene_haystack.SingleCellExperiment <- function(x, dim1 = 1, dim2 = 2, assay
 #' @rdname plot_gene_haystack
 #' @export
 plot_gene_haystack.Seurat <- function(x, dim1 = 1, dim2 = 2, assay = "RNA", slot = "data", coord = "tsne", ...) {
-  if (!requireNamespace("Seurat", quietly = TRUE)) {
-    stop("Package \"Seurat\" needed for this function to work. Please install it.", call. = FALSE)
+  if (!requireNamespace("SeuratObject", quietly = TRUE)) {
+    stop("Package \"SeuratObject\" needed for this function to work. Please install it.", call. = FALSE)
   }
 
-  y <- Seurat::GetAssayData(x, slot = slot, assay = assay)
-  z <- Seurat::Embeddings(x, coord)
+  y <- SeuratObject::GetAssayData(x, slot = slot, assay = assay)
+  z <- SeuratObject::Embeddings(x, coord)
   plot_gene_haystack_raw(z[, dim1], z[, dim2], expression = y, ...)
 }
 
@@ -220,12 +232,12 @@ plot_gene_set_haystack.SingleCellExperiment <- function(x, dim1 = 1, dim2 = 2, a
 #' @rdname plot_gene_set_haystack
 #' @export
 plot_gene_set_haystack.Seurat <- function(x, dim1 = 1, dim2 = 2, assay = "RNA", slot = "data", coord = "tsne", ...) {
-  if (!requireNamespace("Seurat", quietly = TRUE)) {
-    stop("Package \"Seurat\" needed for this function to work. Please install it.", call. = FALSE)
+  if (!requireNamespace("SeuratObject", quietly = TRUE)) {
+    stop("Package \"SeuratObject\" needed for this function to work. Please install it.", call. = FALSE)
   }
 
-  y <- Seurat::GetAssayData(x, slot = slot, assay = assay)
-  z <- Seurat::Embeddings(x, coord)
+  y <- SeuratObject::GetAssayData(x, slot = slot, assay = assay)
+  z <- SeuratObject::Embeddings(x, coord)
   plot_gene_set_haystack_raw(z[, dim1], z[, dim2], detection = y > 1, ...)
 }
 
