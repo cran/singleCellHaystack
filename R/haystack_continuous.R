@@ -34,8 +34,16 @@ haystack_continuous_highD = function(x, expression, grid.points = 100, weights.a
 
   message("### calling haystack_continuous_highD()...")
 
-  if (!is.null(grid.coord))
+  if (!is.null(grid.coord)) {
     grid.points <- nrow(grid.coord)
+
+    if (ncol(x) != ncol(grid.coord))
+      stop("Coordinates and grid points have different number of columns.")
+
+    if (!is.null(colnames(x)) || !is.null(colnames(grid.coord)))
+      if (! identical(colnames(x), colnames(grid.coord)))
+        stop("Coordinates and grid points have different column names.")
+  }
 
   # Check for sparseMatrixStats package.
   if(requireNamespace("sparseMatrixStats", quietly = TRUE)){
@@ -61,7 +69,7 @@ haystack_continuous_highD = function(x, expression, grid.points = 100, weights.a
     stop("Some features have an average signal < 0. Expect average signal >= 0.")
 
   if (useSMS)
-    expr.sd <- sparseMatrixStats::rowSds(expression)
+    expr.sd <- sparseMatrixStats::rowSds(expression, useNames=FALSE)
   else
     expr.sd <- apply(expression,1,sd)
 
@@ -286,6 +294,7 @@ haystack_continuous_highD = function(x, expression, grid.points = 100, weights.a
   rand_info <- p.vals$info
   rand_info$method <- spline.method
   rand_info$genes_to_randomize <- genes.to.randomize
+  rand_info$KLD_rand <- all.D_KL.randomized
   p.vals <- p.vals$fitted
 
   # bonferroni correction for multiple testing
@@ -317,6 +326,8 @@ haystack_continuous_highD = function(x, expression, grid.points = 100, weights.a
       method="continuous_highD",
       randomization = rand_info,
       grid.coordinates = grid.coord,
+      coord_mean = x.scale.center,
+      coord_std = x.scale.scale,
       densities = density.contributions,
       cv = coeffVar
     )

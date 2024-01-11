@@ -1,3 +1,19 @@
+# singleCellHaystack 1.0.2
+
+* Fix call to sparseMatrixStats::rowSds.
+
+* Fix citation of newest paper in DESCRIPTION.
+
+# singleCellHaystack 1.0.1
+
+* Add support for Seurat v5.
+
+# singleCellHaystack 1.0.0
+
+* CRAN release of the new continuous method.
+
+* Details explained in Vandenbon and Diez, bioRxiv, 2022.
+
 # singleCellHaystack 0.9.x (unreleased)
 
 * Add new continuous method.
